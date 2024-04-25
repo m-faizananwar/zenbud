@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'contentPage.dart';
+import 'contentpage.dart';
 
 void main() {
   runApp(const ZenbudHomePage());

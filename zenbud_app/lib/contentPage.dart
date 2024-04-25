@@ -3,7 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'alarm.dart'; // Import the AlarmClockPage widget
 import 'chatbot.dart'; // Import the ChatbotPage widget
 import 'reminder.dart'; // Import the RemindersPage widget
-import 'musicPlayer.dart'; // Import the MusicPlayerPage widget
+import 'musicplayer.dart'; // Import the MusicPlayerPage widget
 
 class ContentPage extends StatefulWidget {
   const ContentPage({super.key});
