@@ -14,11 +14,14 @@ class ZenbudHomePage extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'Roboto',
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'Roboto',
       ),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
@@ -68,7 +71,6 @@ class SplashScreen extends StatelessWidget {
                 color: Colors.blue, // Set the text color to blue
                 fontSize: 30, // Set the font size
                 fontWeight: FontWeight.bold, // Set the font weight
-                fontFamily: 'Roboto', // Use a rounded font family
               ),
             ),
           ],
