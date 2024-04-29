@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'alarm.dart'; // Import the AlarmClockPage widget
-import 'chatbot.dart'; // Import the ChatbotPage widget
-import 'reminder.dart'; // Import the RemindersPage widget
-import 'musicplayer.dart'; // Import the MusicPlayerPage widget
+import 'package:oops_1/screens/home.dart';
+import 'Alarm.dart'; // Import the AlarmClockPage widget
+
+import 'ChatScreen.dart'; // Import the ChatbotPage widget
+import 'Reminder.dart'; // Import the RemindersPage widget
+import 'MusicPlayer.dart'; // Import the MusicPlayerPage widget
+import 'pomodoro_clock.dart';
+import 'screen_time.dart'; // Import the ScreenTimePage widget
 
 class ContentPage extends StatefulWidget {
-  const ContentPage({super.key});
   @override
   _ContentPageState createState() => _ContentPageState();
 }
@@ -18,41 +21,35 @@ class _ContentPageState extends State<ContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Content Page'),
+        title: Text('Zenbud'),
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [
-          AlarmPage(),
-          Chatbotpage(),
+        children: [
+          AlarmPagee(),
+          ChatScreen(),
           RemindersPage(),
-          MusicPlayerPage(),
+          Pomodoro(),
+          ScreenTimePage()
         ],
       ),
       bottomNavigationBar: GNav(
-        gap: 4,
+        gap: 2,
         activeColor: Colors.white,
-        iconSize: 24,
+        iconSize: 14,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        duration: const Duration(milliseconds: 800),
+        duration: const Duration(milliseconds: 400),
         tabBackgroundColor: Colors.lightBlueAccent,
         tabs: const [
           GButton(
             icon: Icons.alarm,
             text: 'Alarm Clock',
+            textStyle: TextStyle(fontSize: 11),
           ),
-          GButton(
-            icon: Icons.chat,
-            text: 'Chatbot',
-          ),
-          GButton(
-            icon: Icons.book,
-            text: 'Reminders',
-          ),
-          GButton(
-            icon: Icons.music_note_sharp,
-            text: 'Music Player',
-          ),
+          GButton(icon: Icons.chat, text: 'Chatbot', textStyle: TextStyle(fontSize: 11)),
+          GButton(icon: Icons.book, text: 'Reminders', textStyle: TextStyle(fontSize: 11)),
+          GButton(icon: Icons.music_note_sharp, text: 'Music Player', textStyle: TextStyle(fontSize: 11)),
+          GButton(icon: Icons.grading, text: 'Screen Time', textStyle: TextStyle(fontSize: 11)),
         ],
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
