@@ -7,8 +7,7 @@ import 'package:intl/intl.dart';
 class ExampleAlarmEditScreen extends StatefulWidget {
   final AlarmSettings? alarmSettings;
 
-  const ExampleAlarmEditScreen({Key? key, this.alarmSettings})
-      : super(key: key);
+  const ExampleAlarmEditScreen({super.key, this.alarmSettings});
 
   @override
   State<ExampleAlarmEditScreen> createState() => _ExampleAlarmEditScreenState();
@@ -51,11 +50,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       volume = widget.alarmSettings!.volume;
       assetAudio = widget.alarmSettings!.assetAudioPath;
     }
-    int initialMinute = 30;
-    _minuteController =
-        FixedExtentScrollController(initialItem: selectedDateTime.minute);
-    _hourController =
-        FixedExtentScrollController(initialItem: selectedDateTime.hour - 1);
+    _minuteController = FixedExtentScrollController(initialItem: selectedDateTime.minute);
+    _hourController = FixedExtentScrollController(initialItem: selectedDateTime.hour - 1);
     if (selectedDateTime.hour > 12) {
       _ampmController = FixedExtentScrollController(initialItem: 1);
     }
@@ -85,12 +81,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     if (res != null) {
       setState(() {
         final DateTime now = DateTime.now();
-        selectedDateTime = now.copyWith(
-            hour: res.hour,
-            minute: res.minute,
-            second: 0,
-            millisecond: 0,
-            microsecond: 0);
+        selectedDateTime = now.copyWith(hour: res.hour, minute: res.minute, second: 0, millisecond: 0, microsecond: 0);
         if (selectedDateTime.isBefore(now)) {
           selectedDateTime = selectedDateTime.add(const Duration(days: 1));
         }
@@ -99,9 +90,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   }
 
   AlarmSettings buildAlarmSettings() {
-    final id = creating
-        ? DateTime.now().millisecondsSinceEpoch % 10000
-        : widget.alarmSettings!.id;
+    final id = creating ? DateTime.now().millisecondsSinceEpoch % 10000 : widget.alarmSettings!.id;
 
     final alarmSettings = AlarmSettings(
       id: id,
@@ -292,8 +281,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     looping: true,
                     itemExtent: 100,
                     scrollController: _hourController,
-                    selectionOverlay:
-                    const CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                       background: Colors.transparent,
                       capEndEdge: true,
                       // capStartEdge: true,
@@ -328,8 +316,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     looping: true,
                     itemExtent: 100,
                     scrollController: _minuteController,
-                    selectionOverlay:
-                    const CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                       background: Colors.transparent,
                       capEndEdge: true,
                       // capStartEdge: true,
@@ -362,8 +349,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     // looping: true,
                     itemExtent: 100,
                     scrollController: _ampmController,
-                    selectionOverlay:
-                    const CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                       background: Colors.transparent,
                       // capEndEdge: true,
                       // capStartEdge: true,
@@ -381,7 +367,10 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                       _time();
                     }),
                     children: [
-                      for (var i in ['am', 'pm']) ...[
+                      for (var i in [
+                        'am',
+                        'pm'
+                      ]) ...[
                         Center(
                           child: Text(
                             i,
@@ -409,9 +398,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     // ),
                     ListTile(
                       title: Text(getDay()),
-                      trailing: IconButton(
-                          onPressed: () => _selectDate(context),
-                          icon: const Icon(Icons.calendar_month_outlined)),
+                      trailing: IconButton(onPressed: () => _selectDate(context), icon: const Icon(Icons.calendar_month_outlined)),
                     ),
                     // Center(
                     //   child: Row(
@@ -466,8 +453,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                             child: Text('One Piece'),
                           ),
                         ],
-                        onChanged: (value) =>
-                            setState(() => assetAudio = value!),
+                        onChanged: (value) => setState(() => assetAudio = value!),
                       ),
                     ),
                     const Padding(
@@ -477,11 +463,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     ListTile(
                       title: const Text("Vibration"),
                       // subtitle: Text("Basic call"),
-                      trailing: Switch(
-                          inactiveThumbColor: null,
-                          value: vibrate,
-                          onChanged: (value) =>
-                              setState(() => vibrate = value)),
+                      trailing: Switch(inactiveThumbColor: null, value: vibrate, onChanged: (value) => setState(() => vibrate = value)),
                     ),
 
                     const Padding(
@@ -493,8 +475,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                       // subtitle: const Text("Basic Bell"),
                       trailing: Switch(
                         value: volume != null,
-                        onChanged: (value) =>
-                            setState(() => volume = value ? 0.5 : null),
+                        onChanged: (value) => setState(() => volume = value ? 0.5 : null),
                       ),
                     ),
 
@@ -502,30 +483,28 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                       height: 30,
                       child: volume != null
                           ? Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(
-                              volume! > 0.7
-                                  ? Icons.volume_up_rounded
-                                  : volume! > 0.1
-                                  ? Icons.volume_down_rounded
-                                  : Icons.volume_mute_rounded,
-                            ),
-                            Expanded(
-                              child: Slider(
-                                value: volume!,
-                                onChanged: (value) {
-                                  setState(() => volume = value);
-                                },
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    volume! > 0.7
+                                        ? Icons.volume_up_rounded
+                                        : volume! > 0.1
+                                            ? Icons.volume_down_rounded
+                                            : Icons.volume_mute_rounded,
+                                  ),
+                                  Expanded(
+                                    child: Slider(
+                                      value: volume!,
+                                      onChanged: (value) {
+                                        setState(() => volume = value);
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            )
                           : const SizedBox(),
                     ),
                     const SizedBox(),
@@ -564,8 +543,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   }
 
   void _time() {
-    String timeString =
-        "$hour:$minute $amPm"; // Replace this with your time string
+    String timeString = "$hour:$minute $amPm"; // Replace this with your time string
 
     DateTime dateTime = convertStringToDateTime(timeString);
     setState(() {
@@ -583,18 +561,13 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
 
     // Assuming you want to set the date part to today
     DateTime today = DateTime.now();
-    dateTime = DateTime(
-        today.year, today.month, today.day, dateTime.hour, dateTime.minute);
+    dateTime = DateTime(today.year, today.month, today.day, dateTime.hour, dateTime.minute);
 
     return dateTime;
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? now = await showDatePicker(
-        context: context,
-        firstDate: DateTime.now(),
-        currentDate: selectedDateTime,
-        lastDate: DateTime(2030, 12, 31));
+    DateTime? now = await showDatePicker(context: context, firstDate: DateTime.now(), currentDate: selectedDateTime, lastDate: DateTime(2030, 12, 31));
 
     if (now != null) {
       setState(() {
@@ -607,12 +580,3 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     }
   }
 }
-
-
-
-
-
-
-
-
-

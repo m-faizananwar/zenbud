@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
@@ -24,17 +24,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
     setState(() {
       // Add user message to the chat
-      _messages
-          .add(Message(isUser: true, message: message, date: DateTime.now()));
+      _messages.add(Message(isUser: true, message: message, date: DateTime.now()));
     });
 
     // Send the user message to the bot and wait for the response
-    final content = [Content.text(message)];
+    final content = [
+      Content.text(message)
+    ];
     final response = await model.generateContent(content);
     setState(() {
       // Add bot's response to the chat
-      _messages.add(Message(
-          isUser: false, message: response.text ?? "", date: DateTime.now()));
+      _messages.add(Message(isUser: false, message: response.text ?? "", date: DateTime.now()));
     });
   }
 
@@ -54,7 +54,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     return Messages(
                       isUser: message.isUser,
                       message: message.message,
-                      date: DateFormat('HH:mm').format(message.date), name: '',
+                      date: DateFormat('HH:mm').format(message.date),
+                      name: '',
                     );
                   },
                 ),
@@ -110,66 +111,41 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-
 }
 
-
-class Message{
+class Message {
   final bool isUser;
   final String message;
   final DateTime date;
-  Message({ required this.isUser, required this.message, required this.date});
+  Message({required this.isUser, required this.message, required this.date});
 }
+
 class Messages extends StatelessWidget {
   final bool isUser;
   final String message;
   final String date;
-  const Messages(
-      {
-        super.key,
-        required this.isUser,
-        required this.message,
-        required this.date, required String name
-      });
-
-
-
-
-
+  const Messages({super.key, required this.isUser, required this.message, required this.date, required String name});
 
   @override
   Widget build(BuildContext context) {
-    final sender = isUser ? 'User' : 'ZenBud';
-    final imagePath = isUser ? 'assets/user_icon.png' : 'assets/zen_icon.png';
-
-
-
-
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(15),
-      margin: EdgeInsets.symmetric(vertical:1).copyWith(
-      ),
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.symmetric(vertical: 1).copyWith(),
       decoration: BoxDecoration(
           //color: isUser ? Colors.blueAccent : Colors.grey.shade400,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              bottomLeft: isUser ? Radius.circular(10): Radius.zero,
-              topRight: Radius.circular(10),
-              bottomRight: isUser ? Radius.zero : Radius.circular(10)
-          )
-      ),
+          borderRadius: BorderRadius.only(topLeft: const Radius.circular(10), bottomLeft: isUser ? const Radius.circular(10) : Radius.zero, topRight: const Radius.circular(10), bottomRight: isUser ? Radius.zero : const Radius.circular(10))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             message,
-            style: TextStyle(fontSize: 16,color: isUser ? Colors.grey: Colors.grey),
+            style: TextStyle(fontSize: 16, color: isUser ? Colors.grey : Colors.grey),
           ),
           //Text(
-            //date,
-            //style: TextStyle(fontSize: 10,color: isUser ? Colors.white: Colors.black,),
-         // )
+          //date,
+          //style: TextStyle(fontSize: 10,color: isUser ? Colors.white: Colors.black,),
+          // )
         ],
       ),
     );

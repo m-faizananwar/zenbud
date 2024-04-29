@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AlarmPagee extends StatefulWidget {
-  const AlarmPagee({Key? key}) : super(key: key);
+  const AlarmPagee({super.key});
 
   @override
   State<AlarmPagee> createState() => _AlarmPageeState();
@@ -19,7 +19,7 @@ class AlarmPagee extends StatefulWidget {
 
 class _AlarmPageeState extends State<AlarmPagee> {
   late List<AlarmSettings> alarms;
-  List<bool> _alarmOnOff = [];
+  final List<bool> _alarmOnOff = [];
 
   static StreamSubscription<AlarmSettings>? subscription;
 
@@ -263,10 +263,10 @@ class Realtime extends StatefulWidget {
   const Realtime({super.key});
 
   @override
-  _RealtimeState createState() => _RealtimeState();
+  RealtimeState createState() => RealtimeState();
 }
 
-class _RealtimeState extends State<Realtime> {
+class RealtimeState extends State<Realtime> {
   late StreamController<DateTime> _clockStreamController;
   late DateTime _currentTime;
 

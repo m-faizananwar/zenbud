@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:oops_1/screens/home.dart';
-import 'Alarm.dart'; // Import the AlarmClockPage widget
 
 import 'ChatScreen.dart'; // Import the ChatbotPage widget
-import 'Reminder.dart'; // Import the RemindersPage widget
 import 'MusicPlayer.dart'; // Import the MusicPlayerPage widget
 import 'pomodoro_clock.dart';
 import 'screen_time.dart'; // Import the ScreenTimePage widget
 
 class ContentPage extends StatefulWidget {
+  const ContentPage({super.key});
   @override
-  _ContentPageState createState() => _ContentPageState();
+  ContentPageState createState() => ContentPageState();
 }
 
-class _ContentPageState extends State<ContentPage> {
+class ContentPageState extends State<ContentPage> {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Zenbud'),
+        title: const Text('Zenbud'),
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: [
+        children: const [
           AlarmPagee(),
           ChatScreen(),
-          RemindersPage(),
           Pomodoro(),
-          ScreenTimePage()
+          MusicPlayerPage(),
+          ScreenTimePage(),
         ],
       ),
       bottomNavigationBar: GNav(

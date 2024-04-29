@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'contentpage.dart';
 import 'dart:async';
 
-import 'package:oops_1/screens/home.dart';
-import 'package:flutter/material.dart';
 import 'package:alarm/alarm.dart';
 import 'package:flutter/services.dart';
-import 'pomodoro_clock.dart'; // Import the Pomodoro clock file
 
 Future<void> main() async {
   runApp(const ZenbudHomePage());
