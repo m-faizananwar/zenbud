@@ -14,6 +14,7 @@ class ContentPage extends StatefulWidget {
 }
 
 class ContentPageState extends State<ContentPage> {
+  PageController pageController = PageController(initialPage: 0);
   int _selectedIndex = 0;
 
   @override
@@ -22,8 +23,8 @@ class ContentPageState extends State<ContentPage> {
       appBar: AppBar(
         title: const Text('Zenbud'),
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: PageView(
+        controller: pageController,
         children: const [
           AlarmPagee(),
           ChatScreen(),
@@ -31,13 +32,18 @@ class ContentPageState extends State<ContentPage> {
           MusicPlayerPage(),
           ScreenTimePage(),
         ],
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
       bottomNavigationBar: GNav(
         gap: 2,
         activeColor: Colors.white,
         iconSize: 14,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        duration: const Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 100),
         tabBackgroundColor: Colors.lightBlueAccent,
         tabs: const [
           GButton(
@@ -55,6 +61,7 @@ class ContentPageState extends State<ContentPage> {
           setState(() {
             _selectedIndex = index;
           });
+          pageController.jumpToPage(index); // Add this line
         },
       ),
     );

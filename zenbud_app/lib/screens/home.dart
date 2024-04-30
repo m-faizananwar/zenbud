@@ -269,6 +269,7 @@ class Realtime extends StatefulWidget {
 class RealtimeState extends State<Realtime> {
   late StreamController<DateTime> _clockStreamController;
   late DateTime _currentTime;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -279,7 +280,7 @@ class RealtimeState extends State<Realtime> {
   }
 
   void _startClock() {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       _currentTime = DateTime.now();
       _clockStreamController.add(_currentTime);
     });
@@ -287,6 +288,7 @@ class RealtimeState extends State<Realtime> {
 
   @override
   void dispose() {
+    _timer?.cancel();
     _clockStreamController.close();
     super.dispose();
   }
