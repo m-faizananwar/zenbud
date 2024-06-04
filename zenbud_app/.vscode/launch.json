@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "OOPS_1",
+            "name": "Zenbud",
             "request": "launch",
             "type": "dart",
-            "program" : "D:\\Final zenbud\\OOPS_1\\lib\\zenbud_homepage.dart"
+            "program" : "lib\\zenbud_homepage.dart"
         },
         {
-            "name": "OOPS_1 (profile mode)",
+            "name": "Zenbud (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "OOPS_1 (release mode)",
+            "name": "Zenbud (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

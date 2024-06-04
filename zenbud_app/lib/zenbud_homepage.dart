@@ -50,17 +50,6 @@ class SplashScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Container(
-          padding: const EdgeInsets.only(left: 16), // Adjust the left padding
-          alignment: Alignment.centerLeft, // Align the title to the left
-          child: const Text(
-            "",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ),
-        automaticallyImplyLeading: false,
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

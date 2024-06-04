@@ -3,6 +3,8 @@ import 'package:alarm/model/alarm_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class ExampleAlarmEditScreen extends StatefulWidget {
   final AlarmSettings? alarmSettings;
@@ -50,8 +52,11 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       volume = widget.alarmSettings!.volume;
       assetAudio = widget.alarmSettings!.assetAudioPath;
     }
-    _minuteController = FixedExtentScrollController(initialItem: selectedDateTime.minute);
-    _hourController = FixedExtentScrollController(initialItem: selectedDateTime.hour - 1);
+    int initialMinute = 30;
+    _minuteController =
+        FixedExtentScrollController(initialItem: selectedDateTime.minute);
+    _hourController =
+        FixedExtentScrollController(initialItem: selectedDateTime.hour - 1);
     if (selectedDateTime.hour > 12) {
       _ampmController = FixedExtentScrollController(initialItem: 1);
     }
@@ -81,7 +86,12 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     if (res != null) {
       setState(() {
         final DateTime now = DateTime.now();
-        selectedDateTime = now.copyWith(hour: res.hour, minute: res.minute, second: 0, millisecond: 0, microsecond: 0);
+        selectedDateTime = now.copyWith(
+            hour: res.hour,
+            minute: res.minute,
+            second: 0,
+            millisecond: 0,
+            microsecond: 0);
         if (selectedDateTime.isBefore(now)) {
           selectedDateTime = selectedDateTime.add(const Duration(days: 1));
         }
@@ -90,7 +100,9 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   }
 
   AlarmSettings buildAlarmSettings() {
-    final id = creating ? DateTime.now().millisecondsSinceEpoch % 10000 : widget.alarmSettings!.id;
+    final id = creating
+        ? DateTime.now().millisecondsSinceEpoch % 10000
+        : widget.alarmSettings!.id;
 
     final alarmSettings = AlarmSettings(
       id: id,
@@ -116,155 +128,6 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /* return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  "Cancel",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(color: Colors.blueAccent),
-                ),
-              ),
-              TextButton(
-                onPressed: saveAlarm,
-                child: loading
-                    ? const CircularProgressIndicator()
-                    : Text(
-                        "Save",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(color: Colors.blueAccent),
-                      ),
-              ),
-            ],
-          ),
-          Text(getDay(), style: Theme.of(context).textTheme.titleMedium!
-              // .copyWith(color: Colors.blueAccent.withOpacity(0.8)),
-              ),
-          RawMaterialButton(
-            onPressed: pickTime,
-            // fillColor: Colors.grey[200],
-            child: Text(
-                TimeOfDay.fromDateTime(selectedDateTime).format(context),
-                style: Theme.of(context).textTheme.displayMedium!
-                // .copyWith(color: Colors.blueAccent),
-                ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Loop alarm audio',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Switch(
-                value: loopAudio,
-                onChanged: (value) => setState(() => loopAudio = value),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Vibrate',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Switch(
-                value: vibrate,
-                onChanged: (value) => setState(() => vibrate = value),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Sound',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              DropdownButton(
-                value: assetAudio,
-                items: const [
-                  DropdownMenuItem<String>(
-                    value: 'assets/marimba.mp3',
-                    child: Text('Marimba'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/nokia.mp3',
-                    child: Text('Nokia'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/mozart.mp3',
-                    child: Text('Mozart'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/star_wars.mp3',
-                    child: Text('Star Wars'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/one_piece.mp3',
-                    child: Text('One Piece'),
-                  ),
-                ],
-                onChanged: (value) => setState(() => assetAudio = value!),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Custom volume',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Switch(
-                value: volume != null,
-                onChanged: (value) =>
-                    setState(() => volume = value ? 0.5 : null),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 30,
-            child: volume != null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(
-                        volume! > 0.7
-                            ? Icons.volume_up_rounded
-                            : volume! > 0.1
-                                ? Icons.volume_down_rounded
-                                : Icons.volume_mute_rounded,
-                      ),
-                      Expanded(
-                        child: Slider(
-                          value: volume!,
-                          onChanged: (value) {
-                            setState(() => volume = value);
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                : const SizedBox(),
-          ),
-          const SizedBox(),
-        ],
-      ),
-    );
-  }*/
     return Scaffold(
       body: Column(
         children: [
@@ -281,7 +144,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     looping: true,
                     itemExtent: 100,
                     scrollController: _hourController,
-                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay:
+                    const CupertinoPickerDefaultSelectionOverlay(
                       background: Colors.transparent,
                       capEndEdge: true,
                       // capStartEdge: true,
@@ -316,7 +180,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     looping: true,
                     itemExtent: 100,
                     scrollController: _minuteController,
-                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay:
+                    const CupertinoPickerDefaultSelectionOverlay(
                       background: Colors.transparent,
                       capEndEdge: true,
                       // capStartEdge: true,
@@ -349,7 +214,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     // looping: true,
                     itemExtent: 100,
                     scrollController: _ampmController,
-                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay:
+                    const CupertinoPickerDefaultSelectionOverlay(
                       background: Colors.transparent,
                       // capEndEdge: true,
                       // capStartEdge: true,
@@ -367,10 +233,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                       _time();
                     }),
                     children: [
-                      for (var i in [
-                        'am',
-                        'pm'
-                      ]) ...[
+                      for (var i in ['am', 'pm']) ...[
                         Center(
                           child: Text(
                             i,
@@ -398,62 +261,26 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     // ),
                     ListTile(
                       title: Text(getDay()),
-                      trailing: IconButton(onPressed: () => _selectDate(context), icon: const Icon(Icons.calendar_month_outlined)),
+                      trailing: IconButton(
+                          onPressed: () => _selectDate(context),
+                          icon: const Icon(Icons.calendar_month_outlined)),
                     ),
-                    // Center(
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     children: [
-                    //       IconButton(onPressed: () {}, icon: Text("M")),
-                    //       IconButton(onPressed: () {}, icon: Text("T")),
-                    //       IconButton(onPressed: () {}, icon: Text("W")),
-                    //       IconButton(onPressed: () {}, icon: Text("T")),
-                    //       IconButton(onPressed: () {}, icon: Text("F")),
-                    //       IconButton(onPressed: () {}, icon: Text("S")),
-                    //       IconButton(
-                    //           onPressed: () {},
-                    //           icon: const Text(
-                    //             "S",
-                    //             style: TextStyle(color: Colors.redAccent),
-                    //           )),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const Padding(
-                    //   padding: EdgeInsets.fromLTRB(12.0, 0, 12, 12),
-                    //   child: TextField(
-                    //       // controller: '_alarmname',
-                    //       ),
-                    // ),
+
 
                     ListTile(
-                      title: const Text("Alarm Sound"),
+                      title: const Text("Ringtone"),
                       // subtitle: const Text("Basic Bell"),
                       trailing: DropdownButton(
                         value: assetAudio,
                         items: const [
                           DropdownMenuItem<String>(
                             value: 'assets/alarm.mp3',
-                            child: Text('alarm'),
+                            child: Text('Suzume',),
                           ),
-                          DropdownMenuItem<String>(
-                            value: 'assets/nokia.mp3',
-                            child: Text('Nokia'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'assets/mozart.mp3',
-                            child: Text('Mozart'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'assets/star_wars.mp3',
-                            child: Text('Star Wars'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'assets/one_piece.mp3',
-                            child: Text('One Piece'),
-                          ),
+
                         ],
-                        onChanged: (value) => setState(() => assetAudio = value!),
+                        onChanged: (value) =>
+                            setState(() => assetAudio = value!),
                       ),
                     ),
                     const Padding(
@@ -463,7 +290,11 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     ListTile(
                       title: const Text("Vibration"),
                       // subtitle: Text("Basic call"),
-                      trailing: Switch(inactiveThumbColor: null, value: vibrate, onChanged: (value) => setState(() => vibrate = value)),
+                      trailing: Switch(
+                          inactiveThumbColor: null,
+                          value: vibrate,
+                          onChanged: (value) =>
+                              setState(() => vibrate = value)),
                     ),
 
                     const Padding(
@@ -475,7 +306,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                       // subtitle: const Text("Basic Bell"),
                       trailing: Switch(
                         value: volume != null,
-                        onChanged: (value) => setState(() => volume = value ? 0.5 : null),
+                        onChanged: (value) =>
+                            setState(() => volume = value ? 0.5 : null),
                       ),
                     ),
 
@@ -483,28 +315,30 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                       height: 30,
                       child: volume != null
                           ? Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(
-                                    volume! > 0.7
-                                        ? Icons.volume_up_rounded
-                                        : volume! > 0.1
-                                            ? Icons.volume_down_rounded
-                                            : Icons.volume_mute_rounded,
-                                  ),
-                                  Expanded(
-                                    child: Slider(
-                                      value: volume!,
-                                      onChanged: (value) {
-                                        setState(() => volume = value);
-                                      },
-                                    ),
-                                  ),
-                                ],
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(
+                              volume! > 0.7
+                                  ? Icons.volume_up_rounded
+                                  : volume! > 0.1
+                                  ? Icons.volume_down_rounded
+                                  : Icons.volume_mute_rounded,
+                            ),
+                            Expanded(
+                              child: Slider(
+                                value: volume!,
+                                onChanged: (value) {
+                                  setState(() => volume = value);
+                                },
                               ),
-                            )
+                            ),
+                          ],
+                        ),
+                      )
                           : const SizedBox(),
                     ),
                     const SizedBox(),
@@ -543,7 +377,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   }
 
   void _time() {
-    String timeString = "$hour:$minute $amPm"; // Replace this with your time string
+    String timeString =
+        "$hour:$minute $amPm"; // Replace this with your time string
 
     DateTime dateTime = convertStringToDateTime(timeString);
     setState(() {
@@ -561,13 +396,18 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
 
     // Assuming you want to set the date part to today
     DateTime today = DateTime.now();
-    dateTime = DateTime(today.year, today.month, today.day, dateTime.hour, dateTime.minute);
+    dateTime = DateTime(
+        today.year, today.month, today.day, dateTime.hour, dateTime.minute);
 
     return dateTime;
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? now = await showDatePicker(context: context, firstDate: DateTime.now(), currentDate: selectedDateTime, lastDate: DateTime(2030, 12, 31));
+    DateTime? now = await showDatePicker(
+        context: context,
+        firstDate: DateTime.now(),
+        currentDate: selectedDateTime,
+        lastDate: DateTime(2025, 12, 31));
 
     if (now != null) {
       setState(() {
@@ -580,3 +420,12 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     }
   }
 }
+
+
+
+
+
+
+
+
+

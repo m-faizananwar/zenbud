@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:Zenbud/screens/edit_alarm.dart';
+import 'package:Zenbud/screens/ring.dart';
 import 'package:alarm/alarm.dart';
 import 'package:alarm/model/alarm_settings.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:oops_1/screens/edit_alarm.dart';
-import 'package:oops_1/screens/ring.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AlarmPagee extends StatefulWidget {
   const AlarmPagee({super.key});
@@ -31,7 +31,7 @@ class _AlarmPageeState extends State<AlarmPagee> {
     }
     loadAlarms();
     subscription ??= Alarm.ringStream.stream.listen(
-      (alarmSettings) => navigateToRingScreen(alarmSettings),
+          (alarmSettings) => navigateToRingScreen(alarmSettings),
     );
   }
 
@@ -52,32 +52,21 @@ class _AlarmPageeState extends State<AlarmPagee> {
 
   Future<void> navigateToRingScreen(AlarmSettings alarmSettings) async {
     await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ExampleAlarmRingScreen(alarmSettings: alarmSettings),
-        ));
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExampleAlarmRingScreen(alarmSettings: alarmSettings),
+      ),
+    );
     loadAlarms();
   }
 
   Future<void> navigateToAlarmScreen(AlarmSettings? settings) async {
-    // final res = await showModalBottomSheet<bool?>(
-    //     context: context,
-    //     isScrollControlled: true,
-    //     shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.circular(10.0),
-    //     ),
-    //     builder: (context) {
-    //       return FractionallySizedBox(
-    //         heightFactor: 0.75,
-    //         child: ExampleAlarmEditScreen(alarmSettings: settings),
-    //       );
-    //     });
     final res = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ExampleAlarmEditScreen(
-                  alarmSettings: settings,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExampleAlarmEditScreen(alarmSettings: settings),
+      ),
+    );
 
     if (res != null && res == true) loadAlarms();
   }
@@ -114,55 +103,45 @@ class _AlarmPageeState extends State<AlarmPagee> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        children: [
-          const SizedBox(height: 100),
-          const Center(child: Realtime()),
-          const SizedBox(height: 60),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                onPressed: () => navigateToAlarmScreen(null),
-                icon: const Icon(Icons.add),
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            const Center(
+              child: Realtime(),
+            ),
+            const SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () => navigateToAlarmScreen(null),
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            ),
+            alarms.isNotEmpty
+                ? Expanded(
+              child: ListView.builder(
+                itemCount: alarms.length,
+                itemBuilder: (context, index) {
+                  return _buildAlarmCard(alarms[index], index);
+                },
               ),
-            ],
-          ),
-          alarms.isNotEmpty
-              ? Expanded(
-                  child: ListView.builder(
-                    itemCount: alarms.length,
-                    itemBuilder: (context, index) {
-                      return _buildAlarmCard(alarms[index], index);
-                    },
-                  ),
-                )
-              : Expanded(
-                  child: Center(
-                    child: Text(
-                      "No Alarms Set",
-                      style: GoogleFonts.roboto(
-                        textStyle: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ),
+            )
+                : Expanded(
+              child: Center(
+                child: Text(
+                  "No Alarms Set",
+                  style: GoogleFonts.raleway(
+                    textStyle: Theme.of(context).textTheme.titleSmall,
+                    fontSize: 20,
                   ),
                 ),
-        ],
-      )),
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.all(10),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       ExampleAlarmHomeShortcutButton(refreshAlarms: loadAlarms),
-      //       FloatingActionButton(
-      //         onPressed: () => navigateToAlarmScreen(null),
-      //         child: const Icon(Icons.alarm_add_rounded, size: 33),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -181,7 +160,7 @@ class _AlarmPageeState extends State<AlarmPagee> {
 
     return [
       hour.toString().padLeft(2, '0'),
-      ampm
+      ampm,
     ];
   }
 
@@ -192,17 +171,21 @@ class _AlarmPageeState extends State<AlarmPagee> {
       onTap: () => navigateToAlarmScreen(alarms[index]),
       child: Slidable(
         closeOnScroll: true,
-        endActionPane: ActionPane(extentRatio: 0.4, motion: const ScrollMotion(), children: [
-          SlidableAction(
-            borderRadius: BorderRadius.circular(12),
-            onPressed: (context) {
-              Alarm.stop(alarm.id);
-              loadAlarms();
-            },
-            icon: Icons.delete_forever,
-            backgroundColor: Colors.red.shade700,
-          )
-        ]),
+        endActionPane: ActionPane(
+          extentRatio: 0.4,
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              borderRadius: BorderRadius.circular(12),
+              onPressed: (context) {
+                Alarm.stop(alarm.id);
+                loadAlarms();
+              },
+              icon: Icons.delete_forever,
+              backgroundColor: Colors.red.shade700,
+            ),
+          ],
+        ),
         child: Card(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,9 +197,6 @@ class _AlarmPageeState extends State<AlarmPagee> {
                 minVerticalPadding: 10,
                 horizontalTitleGap: 10,
                 enabled: false,
-                // onLongPress: () {
-                //   // print("object");
-                // },
                 title: Row(
                   children: [
                     Text(
@@ -232,14 +212,21 @@ class _AlarmPageeState extends State<AlarmPagee> {
                     Text(formattedDate.toString()),
                   ],
                 ),
-
                 trailing: Switch(
                   value: _alarmOnOff[index],
                   onChanged: (bool value) {
                     if (value == false) {
-                      Alarm.set(alarmSettings: alarm.copyWith(dateTime: alarm.dateTime.copyWith(year: 2050)));
+                      Alarm.set(
+                        alarmSettings: alarm.copyWith(
+                          dateTime: alarm.dateTime.copyWith(year: 2050),
+                        ),
+                      );
                     } else {
-                      Alarm.set(alarmSettings: alarm.copyWith(dateTime: alarm.dateTime.copyWith(year: DateTime.now().year)));
+                      Alarm.set(
+                        alarmSettings: alarm.copyWith(
+                          dateTime: alarm.dateTime.copyWith(year: DateTime.now().year),
+                        ),
+                      );
                     }
                     setState(() {
                       _alarmOnOff[index] = value;
@@ -247,10 +234,7 @@ class _AlarmPageeState extends State<AlarmPagee> {
                   },
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              // const SlideTransitionExample()
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -295,22 +279,51 @@ class RealtimeState extends State<Realtime> {
 
   @override
   Widget build(BuildContext context) {
+    DateFormat('hh:mm a').format(_currentTime); // 12-hour format
+
     return StreamBuilder<DateTime>(
       stream: _clockStreamController.stream,
+      initialData: _currentTime,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          String formattedTime = DateFormat('hh:mm:ss a').format(snapshot.data!);
-
-          return Text(
-            formattedTime,
-            style: Theme.of(context).textTheme.headlineLarge,
-          );
-        } else {
-          return Text(
-            "${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
-            style: Theme.of(context).textTheme.headlineLarge,
-          );
         }
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "It's                                                            ",
+              style: GoogleFonts.numans(
+                fontSize: 10,
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                style: GoogleFonts.numans(
+                  textStyle: Theme.of(context).textTheme.headlineLarge,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: DateFormat('hh:mm').format(snapshot.data!),
+                    style: GoogleFonts.numans(
+                      textStyle: Theme.of(context).textTheme.headlineLarge,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 75,
+                    ),
+                  ),
+                  TextSpan(
+                    text: DateFormat(' a').format(snapshot.data!),
+                    style: GoogleFonts.numans(
+                      textStyle: Theme.of(context).textTheme.bodyMedium,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
       },
     );
   }

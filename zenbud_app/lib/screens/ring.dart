@@ -1,11 +1,14 @@
+
 import 'package:alarm/alarm.dart';
 import 'package:alarm/model/alarm_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ExampleAlarmRingScreen extends StatelessWidget {
   final AlarmSettings alarmSettings;
 
-  const ExampleAlarmRingScreen({super.key, required this.alarmSettings});
+  const ExampleAlarmRingScreen({Key? key, required this.alarmSettings})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +18,13 @@ class ExampleAlarmRingScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              "You alarm is ringing...",
-              style: Theme.of(context).textTheme.titleLarge,
+              "Your alarm is ringing...",
+              style: GoogleFonts.raleway(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const Text("🔔", style: TextStyle(fontSize: 50)),
+            Image.asset('assets/alarm.png', width: 200, height: 200),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -41,16 +47,23 @@ class ExampleAlarmRingScreen extends StatelessWidget {
                   },
                   child: Text(
                     "Snooze",
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleLarge,
                   ),
                 ),
                 RawMaterialButton(
                   onPressed: () {
-                    Alarm.stop(alarmSettings.id).then((_) => Navigator.pop(context));
+                    Alarm.stop(alarmSettings.id).then((_) =>
+                        Navigator.pop(context));
                   },
                   child: Text(
                     "Stop",
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleLarge,
                   ),
                 ),
               ],

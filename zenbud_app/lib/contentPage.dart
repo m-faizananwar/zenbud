@@ -1,9 +1,13 @@
+import 'package:Zenbud/ReminderListPage.dart';
+import 'package:Zenbud/screens/home.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:oops_1/screens/home.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'ChatScreen.dart'; // Import the ChatbotPage widget
 import 'MusicPlayer.dart'; // Import the MusicPlayerPage widget
+import 'ProfilePage.dart';
+import 'dashBoard.dart';
 import 'pomodoro_clock.dart';
 import 'screen_time.dart'; // Import the ScreenTimePage widget
 
@@ -14,55 +18,144 @@ class ContentPage extends StatefulWidget {
 }
 
 class ContentPageState extends State<ContentPage> {
-  PageController pageController = PageController(initialPage: 0);
-  int _selectedIndex = 0;
+  PageController pageController = PageController(initialPage: 2);
+  int selectedIndex = 2;
+
+  void changePage(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    pageController.jumpToPage(index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Zenbud'),
+        title: Row(
+          children: [
+            Column(
+              children: [
+                Text(
+                  'ZenBud',
+                  style: GoogleFonts.pacifico(
+                    fontSize: 25,
+                    color: Colors.grey,
+                    letterSpacing: 1,
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+              ],
+            )
+          ],
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(),
+              child: Text(
+                'Menu',
+                style: GoogleFonts.raleway(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text(
+                'Profile',
+                style: GoogleFonts.raleway(),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile()),
+                ); // Navigate to Profile
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.alarm),
+              title: Text(
+                'Reminders',
+                style: GoogleFonts.raleway(),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReminderListPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.music_note),
+              title: Text(
+                'Music Player',
+                style: GoogleFonts.raleway(),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MusicPlayerPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.timer),
+              title: Text(
+                'Pomodoro',
+                style: GoogleFonts.raleway(),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Pomodoro()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: PageView(
         controller: pageController,
-        children: const [
+        children: [
           AlarmPagee(),
+          ReminderListPage(),
+          DashBoard(),
           ChatScreen(),
-          Pomodoro(),
-          MusicPlayerPage(),
           ScreenTimePage(),
         ],
         onPageChanged: (index) {
           setState(() {
-            _selectedIndex = index;
+            selectedIndex = index;
           });
         },
       ),
-      bottomNavigationBar: GNav(
-        gap: 2,
-        activeColor: Colors.white,
-        iconSize: 14,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        duration: const Duration(milliseconds: 100),
-        tabBackgroundColor: Colors.lightBlueAccent,
-        tabs: const [
-          GButton(
-            icon: Icons.alarm,
-            text: 'Alarm Clock',
-            textStyle: TextStyle(fontSize: 11),
-          ),
-          GButton(icon: Icons.chat, text: 'Chatbot', textStyle: TextStyle(fontSize: 11)),
-          GButton(icon: Icons.book, text: 'Reminders', textStyle: TextStyle(fontSize: 11)),
-          GButton(icon: Icons.music_note_sharp, text: 'Music Player', textStyle: TextStyle(fontSize: 11)),
-          GButton(icon: Icons.grading, text: 'Screen Time', textStyle: TextStyle(fontSize: 11)),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: selectedIndex,
+        height: 55.0,
+        items: <Widget>[
+          Icon(Icons.alarm, size: 18),
+          Icon(Icons.notifications_active_outlined, size: 18),
+          Icon(Icons.dashboard, size: 18),
+          Icon(Icons.message, size: 18),
+          Icon(Icons.grading_sharp, size: 18),
         ],
-        selectedIndex: _selectedIndex,
-        onTabChange: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          pageController.jumpToPage(index); // Add this line
+        color: Color(0xFF141218),
+        backgroundColor: Colors.black54,
+        animationDuration: Duration(milliseconds: 250),
+        onTap: (index) {
+          changePage(index);
         },
+        letIndexChange: (index) => true,
       ),
     );
   }
@@ -73,7 +166,7 @@ class ContentPageState extends State<ContentPage> {
     // Automatically redirect to the first option of navigation bar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        _selectedIndex = 0;
+        selectedIndex = 2;
       });
     });
   }

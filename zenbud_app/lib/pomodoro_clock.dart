@@ -1,33 +1,40 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Pomodoro(),
     );
   }
 }
 
 class Pomodoro extends StatefulWidget {
-  const Pomodoro({super.key});
+  const Pomodoro({Key? key});
 
   @override
-  PomodoroState createState() => PomodoroState();
+  _PomodoroState createState() => _PomodoroState();
 }
 
-class PomodoroState extends State<Pomodoro> {
+class _PomodoroState extends State<Pomodoro> {
   int _seconds = 0;
-  int _minutes = 25;
+  int _minutes = 25; // Initial main timer duration set to 25 minute
+  int _lastSelectedMinutes = 21; // Store the last selected duration
   late Timer _timer;
   var f = NumberFormat("00");
   bool _isRunning = false;
+  bool _isBreakTime = false;
+  bool _showTimerButtons = false;
 
-  @override
   void initState() {
     super.initState();
     _updateTimer();
@@ -35,7 +42,7 @@ class PomodoroState extends State<Pomodoro> {
 
   void _updateTimer() {
     if (_isRunning) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
           if (_seconds > 0) {
             _seconds--;
@@ -46,7 +53,16 @@ class PomodoroState extends State<Pomodoro> {
             } else {
               _timer.cancel();
               print("Timer Complete");
-              _isRunning = false;
+
+              if (_isBreakTime) {
+                _minutes = 25; // Reset work timer
+                _isBreakTime = false;
+              } else {
+                _minutes = 5; // Set break time to 5 minutes
+                _isBreakTime = true;
+              }
+
+              _updateTimer(); // Start the new timer
             }
           }
         });
@@ -59,6 +75,7 @@ class PomodoroState extends State<Pomodoro> {
       if (_isRunning) {
         _timer.cancel();
         _isRunning = false;
+        _isBreakTime = false; // Reset to work time
       } else {
         _isRunning = true;
         _updateTimer();
@@ -71,90 +88,118 @@ class PomodoroState extends State<Pomodoro> {
     setState(() {
       _isRunning = false;
       _seconds = 0;
-      _minutes = 25;
+      _minutes = _lastSelectedMinutes; // Reset to the last selected duration
+      _isBreakTime = false; // Reset to work time
     });
+  }
+
+  void _changeMainTimer(int minutes) {
+    if (!_isRunning) {
+      setState(() {
+        _minutes = minutes;
+        _lastSelectedMinutes = minutes; // Store the new selected duration
+        _showTimerButtons = false; // Hide the additional timer buttons
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Pomodoro Timer",
+          style: GoogleFonts.pacifico(
+            textStyle: TextStyle(
+              fontSize: 30.0,
+
+            ),
+          ),
+        ),
+        centerTitle: true,
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _showTimerButtons = !_showTimerButtons;
+              });
+            },
+            child: Icon(Icons.timer),
+            mini: true,
+            backgroundColor: Colors.black,
+          ),
+
+          if (_showTimerButtons)
+            ...[
+              SizedBox(height: 8),
+              FloatingActionButton(
+                onPressed: () => _changeMainTimer(25),
+                child: Text("25"),
+                mini: true,
+                backgroundColor: Colors.black,
+              ),
+              SizedBox(height: 8),
+              FloatingActionButton(
+                onPressed: () => _changeMainTimer(35),
+                child: Text("35"),
+                mini: true,
+                backgroundColor: Colors.black,
+              ),
+              SizedBox(height: 8),
+              FloatingActionButton(
+                onPressed: () => _changeMainTimer(45),
+                child: Text("45"),
+                mini: true,
+                backgroundColor: Colors.black,
+              ),
+            ],
+          SizedBox(height: 8),
+          FloatingActionButton(
+            onPressed: _resetTimer,
+            child: Icon(Icons.refresh),
+            backgroundColor: Colors.black,
+          ),
+          SizedBox(height: 8),
+          FloatingActionButton(
+            onPressed: _toggleTimer,
+            child: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+            backgroundColor: Colors.black,
+          ),
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (int i = 0; i < 1; i++)
-                Column(
-                  children: [
-                    Text(
-                      f.format(_minutes ~/ 1),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 150,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w100,
+              Column(
+                children: [
+                  Text(
+                    f.format(_minutes ~/ 1),
+                    style: GoogleFonts.bebasNeue(
+                      textStyle: TextStyle(
+                        color: Colors.grey.shade800, // Change color to light brown
+                        fontSize: 200, // Set size to match FABs
+                        fontWeight: FontWeight.bold, // Make it bold
                       ),
                     ),
-                    // Add some space between minutes and seconds
-                    Text(
-                      f.format(_seconds % 60),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 80,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w100,
+                  ),
+                  Text(
+                    f.format(_seconds % 60),
+                    style: GoogleFonts.bebasNeue(
+                      textStyle: TextStyle(
+                        color: Colors.grey.shade800, // Change color to light brown
+                        fontSize: 200, // Set size to match FABs
+                        fontWeight: FontWeight.bold, // Make it bold
                       ),
                     ),
-                  ],
-                ),
-            ],
-          ),
-          const SizedBox(
-            height: 100,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: _resetTimer,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40.0),
                   ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    "Reset",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: _toggleTimer,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isRunning ? Colors.redAccent : Colors.lightBlueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40.0),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    _isRunning ? "Pause" : "Start",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                ),
+                ],
               ),
             ],
           ),
