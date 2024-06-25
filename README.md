@@ -32,3 +32,9 @@ All-in-One Solution: Integrates task management, AI assistance, music, and more 
 Productivity Boost: Tools like the Pomodoro Clock and screen time dashboard maximize efficiency.
 User-Centric Design: Crafted for students, our intuitive interface ensures a seamless experience.
 Download Study Partner today and transform your academic routine with Zenbud!
+
+
+<p align="center">
+  <img src="img 3.png" width="350" title="hover text">
+  <img src="your_relative_path_here_number_2_large_name" width="350" alt="accessibility text">
+</p>
