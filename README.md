@@ -34,7 +34,14 @@ User-Centric Design: Crafted for students, our intuitive interface ensures a sea
 Download Study Partner today and transform your academic routine with Zenbud!
 
 
-<p align="center">
+<div align="center">
+  <img src="img 1.png" width="350" title="hover text">
+</div>
+
+<div align="center">
+  <img src="img 2.png" width="350" title="hover text">
+</div>
+
+<div align="center">
   <img src="img 3.png" width="350" title="hover text">
-  <img src="your_relative_path_here_number_2_large_name" width="350" alt="accessibility text">
-</p>
+</div>
